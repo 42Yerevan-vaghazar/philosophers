@@ -57,6 +57,8 @@ void *start_cycle(void *arg_philo)
 	unsigned int time_taken = 0;
 	
 	philo = arg_philo;
+	usleep(10000);
+	gettimeofday(&philo->start, NULL);
 	while (time_taken < philo->data->t_to_die)
 	{
 		time_taken = get_millisecond(philo->start);
@@ -89,7 +91,6 @@ int main(int ac, char **av)
 		// philo[i].data->forks.id = i;
 		printf("barave\n");
 		// philo[i].data->forks.lock = 0;
-		gettimeofday(&philo[i].start, NULL);
 		philo[i].id = i;
 		philo[i].status = "is thinking";
 		pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
