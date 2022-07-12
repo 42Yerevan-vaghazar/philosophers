@@ -37,7 +37,6 @@ typedef struct s_var
 	unsigned int	n_philo;
 	t_fork			forks[N_PHILO];
 	pthread_mutex_t	mutex[N_PHILO];
-	int				i;
 }				t_var;
 
 typedef struct s_philo

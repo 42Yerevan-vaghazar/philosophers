@@ -57,47 +57,44 @@ void *start_cycle(void *arg_philo)
 	unsigned int time_taken = 0;
 	
 	philo = arg_philo;
-	// printf("time_taken = %d  philo->id = %d\n", time_taken, philo->id);
-	printf("time_taken = %d  philo->ptid = %d\n", time_taken, philo->ptid);
-	while (/*time_taken < philo->t_to_die*/ 1)
+	while (time_taken < philo->data->t_to_die)
 	{
 		time_taken = get_millisecond(philo->start);
 	}
-	// printf("%d %d died\n", time_taken, philo->id);
-	// printf("%d %d died\n", time_taken, philo->ptid);
+	printf("%d %d died\n", time_taken, philo->id);
+	printf("%d %ld died\n", time_taken, philo->ptid);
 	pthread_exit(NULL);
 }
 
 int main(int ac, char **av)
 {
-	t_philo philo[200];
-	t_var	vars;
+	t_philo philo[N_PHILO];
+	int		i;
 	struct timeval start, end;
 	double time_taken;
 	
 	if (ac != 5 && ac != 6)
 		return (1);
-	vars.n_philo = ft_atoi(av[1]);
-	vars.t_to_die = ft_atoi(av[2]);
-	vars.t_to_eat = ft_atoi(av[3]);
-	vars.t_to_sleep = ft_atoi(av[4]);
-	philo.forks = malloc(sizeof(t_fork) * vars.n_philo);
-	gettimeofday(&philo.start, NULL);
+	philo[0].data = malloc(sizeof(t_var));
+	philo[0].data->n_philo = ft_atoi(av[1]);
+	philo[0].data->t_to_die = ft_atoi(av[2]);
+	philo[0].data->t_to_eat = ft_atoi(av[3]);
+	philo[0].data->t_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
-		philo.n_t_to_eat = ft_atoi(av[5]);
-	vars.i = 1;
-	while (vars.i <= vars.n_philo)
+		philo[0].data->n_t_to_eat = ft_atoi(av[5]);
+	i = 1;
+	while (i <= philo->data->n_philo)
 	{
-		philo.forks->id = vars.i;
-		philo.forks->lock = 0;
-		philo.id = vars.i;
-		philo.t_to_die = vars.t_to_die;
-		philo.t_to_eat = vars.t_to_eat;
-		philo.t_to_sleep = vars.t_to_sleep;
-		philo.status = "is thinking";
-		pthread_create(&philo.ptid, NULL, &start_cycle, (void *)&philo);
-		printf("philo.ptid = %d\n", philo.ptid);
-		vars.i++;
+		philo[i].data = philo[0].data;
+		// philo[i].data->forks.id = i;
+		printf("barave\n");
+		// philo[i].data->forks.lock = 0;
+		gettimeofday(&philo[i].start, NULL);
+		philo[i].id = i;
+		philo[i].status = "is thinking";
+		pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
+		printf("philo.ptid = %ld\n", philo[i].ptid);
+		i++;
 	}
 	while (1)
 	{
