@@ -18,7 +18,7 @@
 #include <stdlib.h>
 #include "libft.h"
 #include <sys/time.h>
-
+// #include <stddef.h>
 #define N_PHILO 200
 
 typedef struct s_fork
@@ -35,7 +35,9 @@ typedef struct s_var
 	unsigned int    t_to_die;
 	unsigned int	n_t_to_eat;
 	unsigned int	n_philo;
-	t_fork			forks[N_PHILO];
+	double			start_prog;
+	struct			timeval start_time;
+	t_fork			fork[N_PHILO];
 	pthread_mutex_t	mutex[N_PHILO];
 }				t_var;
 
@@ -43,10 +45,21 @@ typedef struct s_philo
 {
 	int				id;
 	pthread_t		ptid;
-	struct			timeval start;
+	struct			timeval restart_time;
+	double			start_live;
+	double			start_eat;
+	double			start_sleep;
+	unsigned int	t_live;
+	unsigned int	t_eat;
+	unsigned int	t_sleep;
 	char			*status;
+	int				fork_1;
+	int				fork_2;
 	t_var			*data;
 }				t_philo;
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n);
+int	ft_atoi(const char *nptr);
 
 
 #endif
