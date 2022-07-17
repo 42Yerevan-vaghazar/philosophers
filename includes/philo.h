@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/07/17 15:45:12 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/07/17 17:01:35 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,12 @@ typedef struct s_var
 	unsigned int	n_t_to_eat;
 	unsigned int	n_philo;
 	double			start_prog;
+	unsigned int	t_start_prog;
 	struct			timeval start_time;
-	t_fork			fork[N_PHILO];
-	pthread_mutex_t	mutex[N_PHILO];
+	t_fork			*fork;
+	pthread_mutex_t	*mutex;
+	pthread_mutex_t	mutex_dead;
+	int				is_dead;
 }				t_var;
 
 typedef struct s_philo
