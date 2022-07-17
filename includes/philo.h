@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/07/10 17:24:02 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/07/17 15:45:12 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ typedef struct s_var
 
 typedef struct s_philo
 {
-	int				id;
+	unsigned int	id;
 	pthread_t		ptid;
 	struct			timeval restart_time;
 	double			start_live;
@@ -60,6 +60,7 @@ typedef struct s_philo
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int	ft_atoi(const char *nptr);
+int	valid_args(char **str, int ac);
 
 
 #endif

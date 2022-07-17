@@ -42,3 +42,37 @@ int	ft_atoi(const char *nptr)
 	}
 	return (num * temp);
 }
+
+int	ft_isdigit(int arg)
+{
+	if (!(arg <= 57 && arg >= 48))
+	{
+		return (0);
+	}
+	return (1);
+}
+
+int	valid_args(char **str, int ac)
+{
+	int	i;
+	int	j;
+
+	i = 1;
+	j = 0;
+	while (i < ac)
+	{
+		while (str[i][j])
+		{
+			if ((!ft_isdigit((int)str[i][j]) && str[i][0] != '+' )
+				|| (!ft_isdigit((int)str[i][j]) && j != 0))
+			{
+				printf("Error: not valid\n");
+				return (0);
+			}
+			j++;
+		}
+		j = 0;
+		i++;
+	}
+	return (1);
+}

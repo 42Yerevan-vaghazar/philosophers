@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:01:25 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/07/10 17:07:48 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/07/17 16:09:22 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,7 @@ void *start_cycle(void *arg_philo)
 	philo->t_sleep = 0;
 	while (philo->t_live < philo->data->t_to_die)
 	{
-		if (ft_strncmp(philo->status, "is eating", 20)
-			&& ft_strncmp(philo->status, "is sleeping", 20))
+		if (!ft_strncmp(philo->status, "is thinking", 20))
 		{
 			if (philo->id == philo->data->n_philo)
 			{
@@ -85,10 +84,7 @@ void *start_cycle(void *arg_philo)
 					printf("%d %d %s has taken a fork\n", start_prog, philo->id, philo->status);
 				}
 			}
-			if ((philo->data->fork[philo->id].lock 
-				|| (philo->id == philo->data->n_philo && philo->data->fork[0].lock))
-					&& philo->data->fork[philo->id - 1].lock
-					&& ft_strncmp(philo->status, "is eating", 20)
+			if (ft_strncmp(philo->status, "is eating", 20)
 					&& philo->fork_1 && philo->fork_2)
 			{
 				philo->t_eat = 0;
@@ -97,9 +93,7 @@ void *start_cycle(void *arg_philo)
 				printf("%d %d %s is eating\n", start_prog, philo->id, philo->status);
 			}
 		}
-		if (philo->t_live >= philo->data->t_to_die)
-			break ;
-		if (philo->t_eat >= philo->data->t_to_eat 
+		if (philo->t_eat >= philo->data->t_to_eat
 			&& !ft_strncmp(philo->status, "is eating", 20))
 		{
 			if (philo->id == philo->data->n_philo)
@@ -132,18 +126,12 @@ void *start_cycle(void *arg_philo)
 					philo->fork_2 = 0;
 				}
 			}
-			// if (!philo->data->fork[philo->id].lock
-			// 	&& !philo->data->fork[philo->id - 1].lock
-			// 	&& !philo->fork_1 && !philo->fork_2
-			// 	&& ft_strncmp(philo->status, "is sleeping", 20))
-			// {
-				philo->status = "is sleeping";
-				printf("%d %d %s is sleeping\n", start_prog, philo->id, philo->status);
-				philo->start_live = get_current_time();
-				philo->start_sleep = philo->start_live;
-				philo->t_eat = 0;
-				philo->t_live = 0;
-			// }
+			philo->status = "is sleeping";
+			printf("%d %d %s is sleeping\n", start_prog, philo->id, philo->status);
+			philo->start_live = get_current_time();
+			philo->start_sleep = philo->start_live;
+			philo->t_eat = 0;
+			philo->t_live = 0;
 		}
 		if (philo->t_sleep >= philo->data->t_to_sleep 
 			&& !ft_strncmp(philo->status, "is sleeping", 20))
@@ -156,19 +144,17 @@ void *start_cycle(void *arg_philo)
 		if (!ft_strncmp(philo->status, "is eating", 20))
 			philo->t_eat = get_current_time() - philo->start_eat;
 		philo->t_live = get_current_time() - philo->start_live;
-		// printf("time_taken %d\n", philo->t_live);
 		start_prog = get_current_time() - philo->data->start_prog;
-		// printf("philo->data->start_prog %f\n", philo->data->start_prog);
 	}
-	printf("time_taken %d\n", philo->t_live);
 	printf("%d %d %s died\n", start_prog, philo->id, philo->status);
-	printf("%d %ld died\n", start_prog, philo->ptid);
 	exit(0);
-	pthread_exit(NULL);
 }
 
-void get_args(t_philo	*philo, char **av, int ac)
+void get_args(t_philo	**arg, char **av, int ac)
 {
+	t_philo	*philo;
+	
+	philo = *arg;
 	philo[0].data = malloc(sizeof(t_var));
 	philo[0].data->n_philo = ft_atoi(av[1]);
 	philo[0].data->t_to_die = ft_atoi(av[2]);
@@ -181,10 +167,10 @@ void get_args(t_philo	*philo, char **av, int ac)
 
 int	create_threads(t_philo **arg)
 {
-	int	i;
+	unsigned int	i;
 	t_philo	*philo;
 
-	philo = (t_philo *)arg;
+	philo = *arg;
 	i = 0;
 	while (i < philo->data->n_philo)
 	{
@@ -197,41 +183,30 @@ int	create_threads(t_philo **arg)
 		pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
 		i++;
 	}
+	return (0);
 }
 
 int main(int ac, char **av)
 {
-	t_philo philo[N_PHILO];
+	t_philo *philo;
 	int		i;
-	struct timeval start, end;
-	double time_taken;
 	
 	if (ac == 5 || ac == 6)
 	{
-		get_args(philo, av, ac);
+		if (!valid_args(av, ac))
+			return (1);
+		philo = malloc(sizeof(t_philo) * ft_atoi(av[1]));
+		get_args(&philo, av, ac);
 		i = -1;
-		while(++i < philo->data->n_philo)
+		while((unsigned int)++i < philo->data->n_philo)
 			pthread_mutex_init(&philo[0].data->mutex[i], NULL);
-		i = 0;
-		// create_threads(&(t_philo *)philo);
-		while (i < philo->data->n_philo)
-		{
-			philo[i].data = philo[0].data;
-			philo[i].fork_1 = 0;
-			philo[i].fork_2 = 0;
-			philo[i].data->fork->lock = 0;
-			philo[i].id = i + 1;
-			philo[i].status = "is thinking";
-			pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
-			i++;
-		}
-		printf("philo %d\n", philo[5].id);
+		create_threads(&philo);
 		while (1)
 		{
 			
 		}
 	}
 	else
-		printf("Error\n");	
+		printf("Error: usage -> number_of_philosophers time_to_die time_to_eat time_to_sleep [number_of_times_each_philosopher_must_eat]\n");
 	return (0);
 }
