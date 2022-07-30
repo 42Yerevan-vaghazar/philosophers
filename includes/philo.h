@@ -38,7 +38,7 @@ typedef struct s_var
 	double			start_prog;
 	unsigned int	t_start_prog;
 	struct			timeval start_time;
-	t_fork			*fork;
+	// t_fork			*fork;
 	pthread_mutex_t	*mutex;
 	pthread_mutex_t	mutex_dead;
 	int				is_dead;
@@ -56,8 +56,8 @@ typedef struct s_philo
 	unsigned int	t_eat;
 	unsigned int	t_sleep;
 	char			*status;
-	int				fork_1;
-	int				fork_2;
+	int				fork_l_id;
+	int				fork_r_id;
 	t_var			*data;
 }				t_philo;
 
