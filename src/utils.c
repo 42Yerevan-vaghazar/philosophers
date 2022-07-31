@@ -77,6 +77,23 @@ int	valid_args(char **str, int ac)
 	return (1);
 }
 
+void zero_initializer(void *arg_1, void *arg_2, void *arg_3, void *arg_4)
+{
+	char *tmp;
+	
+	tmp = arg_1;
+	if (tmp)
+		*tmp = 0;
+	tmp = arg_2;
+	if (tmp)
+		*tmp = 0;
+	tmp = arg_3;
+	if (tmp)
+		*tmp = 0;
+	tmp = arg_4;
+	if (tmp)
+		*tmp = 0;
+}
 
 // void *start_cycle(void *arg_philo)
 // {
