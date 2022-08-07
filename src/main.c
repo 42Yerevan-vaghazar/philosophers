@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:01:25 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/07/31 15:34:36 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/08/07 12:26:32 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,15 @@ long double	get_current_time()
 
 void print_actions(t_philo *philo,char *message)
 {
+	// printf("barev\n");
+	pthread_mutex_lock(&philo->data->mutex_print);
 	philo->data->t_start_prog = philo->data->current_time - philo->data->start_prog;
 	printf("%d %d %s\n", philo->data->t_start_prog, philo->id, message);
+	// printf("%d ", philo->data->t_start_prog);
+	// printf("%d ",  philo->id);
+	// printf("%s\n", message);
+	pthread_mutex_unlock(&philo->data->mutex_print);
+
 }
 
 void *start_cycle(void *arg_philo)
@@ -39,14 +46,20 @@ void *start_cycle(void *arg_philo)
 		pthread_mutex_lock(&philo->data->mutex[philo->fork_r_id]);
 		print_actions(philo, "has taken a fork");
 		print_actions(philo, "is eating");
-		usleep(philo->data->t_to_eat * 1000);
+		philo->start_eat = philo->data->current_time;
+		philo->t_tmp = 0;
+		while (philo->t_tmp < philo->data->t_to_eat && !usleep(100))
+			philo->t_tmp = philo->data->current_time - philo->start_eat;
 		pthread_mutex_unlock(&philo->data->mutex[philo->fork_l_id]);
 		pthread_mutex_unlock(&philo->data->mutex[philo->fork_r_id]);
 		philo->t_n_eat++;
 		philo->t_live = 0;
 		philo->start_live = philo->data->current_time;
 		print_actions(philo, "is sleeping");
-		usleep(philo->data->t_to_eat * 1000);
+		philo->start_sleep = philo->data->current_time;
+		philo->t_tmp = 0;
+		while (philo->t_tmp < philo->data->t_to_sleep && !usleep(100))
+			philo->t_tmp = philo->data->current_time - philo->start_sleep;
 		print_actions(philo, "is thinking");
 	}
 	return (0);
@@ -72,6 +85,19 @@ void get_args(t_philo	**arg, char **av, int ac)
 	philo->data->t_start_prog = 0;
 }
 
+void zero_init(t_philo **philo)
+{
+	int	i;
+
+	i = 0;
+	while (i < (*philo)->data->n_philo)
+	{
+		(*philo)->t_live = 0;
+		(*philo)->t_n_eat = 0;
+		i++;
+	}
+}
+
 int	create_threads(t_philo **arg)
 {
 	int		i;
@@ -88,8 +114,9 @@ int	create_threads(t_philo **arg)
 		else
 			philo[i].fork_r_id = i + 1;
 		philo[i].id = i + 1;
-		zero_initializer(&philo[i].t_n_eat, &philo[i].t_live, NULL, NULL);
+		// zero_initializer(&philo[i].t_n_eat, &philo[i].t_live, NULL, NULL);
 	}
+	zero_init(&philo);
 	philo->data->start_prog = get_current_time();
 	philo->data->current_time = philo->data->start_prog;
 	i = -1;
@@ -101,10 +128,10 @@ int	create_threads(t_philo **arg)
 	return (0);
 }
 
-int	ft_destroy_all(t_philo *philo)
-{
+// int	ft_destroy_all(t_philo *philo)
+// {
 	
-}
+// }
 
 int main(int ac, char **av)
 {
@@ -117,25 +144,30 @@ int main(int ac, char **av)
 			return (1);
 		get_args(&philo, av, ac);
 		pthread_mutex_init(&philo->data->mutex_dead, NULL);
+		pthread_mutex_init(&philo->data->mutex_print, NULL);
 		i = -1;
 		while(++i < philo->data->n_philo)
 			pthread_mutex_init(&philo->data->mutex[i], NULL);
 		create_threads(&philo);
 		i = 0;
+		// printf("barev\n");
+		philo[i].start_live = get_current_time();
 		while (/*philo->data->t_to_die > philo[i].t_live
 			&&*/ (ac == 5 || philo->data->n_t_to_eat > philo->t_n_eat))
 		{
-				// usleep(1000000);
-			if (philo->data->t_to_die < philo[i].t_live)
-			{
-				print_actions(&philo[i], "died");
-				break;
-			}
+			// 	// usleep(1000000);
+			// if (philo->data->t_to_die < philo[i].t_live)
+			// {
+			// 	print_actions(&philo[i], "died");
+			// 	break;
+			// }
+			// usleep(100);
 			philo->data->current_time = get_current_time();
-			philo[i].t_live = philo->data->current_time - philo[i].start_live;
-			if (i == philo->data->n_philo - 1)
-				i = -1;
-			i++;
+			// printf("%f\n", philo->data->current_time - philo[i].start_live);
+			// philo[i].t_live = philo->data->current_time - philo[i].start_live;
+			// if (i == philo->data->n_philo - 1)
+			// 	i = -1;
+			// i++;
 		}
 		free(philo->data->mutex);
 		free(philo->data);

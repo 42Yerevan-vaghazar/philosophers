@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/07/31 14:38:23 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/08/07 11:40:59 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ typedef struct s_var
 	unsigned int	t_start_prog;
 	double			current_time;
 	pthread_mutex_t	*mutex;
+	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_dead;
 	int				is_dead;
 }				t_var;
@@ -41,6 +42,9 @@ typedef struct s_philo
 	pthread_t		ptid;
 	double			start_live;
 	unsigned int	t_live;
+	double			start_eat;
+	double			start_sleep;
+	unsigned int	t_tmp;
 	int				fork_l_id;
 	int				fork_r_id;
 	unsigned int	t_n_eat;

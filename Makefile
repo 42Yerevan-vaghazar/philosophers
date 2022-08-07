@@ -4,7 +4,7 @@ BONUS = philo_bonus
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = 
 
 SRCS = $(wildcard ./src/*.c)
 
