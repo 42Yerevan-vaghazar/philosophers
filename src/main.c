@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:01:25 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/08/07 17:24:17 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:26:25 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,7 +104,6 @@ int	dead_check(t_philo *philo)
 int	main(int ac, char **av)
 {
 	t_philo	*philo;
-	int		i;
 
 	if (ac == 5 || ac == 6)
 	{

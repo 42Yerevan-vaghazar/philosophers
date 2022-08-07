@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:28:05 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/08/07 17:24:29 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/08/07 17:26:04 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,6 +97,7 @@ void	*ft_check_eat(void *arg)
 	int		i;
 
 	philo = arg;
+	i = 0;
 	while (i != philo->data->n_philo && !philo->data->is_dead)
 	{
 		i = 0;
