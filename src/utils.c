@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/08/07 16:31:22 by vaghazar          #+#    #+#             */
+/*   Updated: 2022/08/07 17:10:57 by vaghazar         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philo.h"
 
 int	ft_strncmp(const char *s1, const char *s2, size_t n)
@@ -43,66 +55,38 @@ int	ft_atoi(const char *nptr)
 	return (num * temp);
 }
 
-int	ft_isdigit(int arg)
+long double	get_current_time(void)
 {
-	if (!(arg <= 57 && arg >= 48))
-	{
-		return (0);
-	}
-	return (1);
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-int	valid_args(char **str, int ac)
+void	print_actions(t_philo *philo, char *message)
 {
-	int	i;
-	int	j;
-
-	i = 1;
-	j = 0;
-	while (i < ac)
-	{
-		while (str[i][j])
-		{
-			if ((!ft_isdigit((int)str[i][j]) && str[i][0] != '+' )
-				|| (!ft_isdigit((int)str[i][j]) && j != 0))
-			{
-				printf("Error: not valid\n");
-				return (0);
-			}
-			j++;
-		}
-		j = 0;
-		i++;
-	}
-	return (1);
+	pthread_mutex_lock(&philo->data->mutex_print);
+	philo->data->t_start_prog = philo->data->current_time
+		- philo->data->start_prog;
+	printf("%d %d %s %d\n", philo->data->t_start_prog,
+		philo->id, message, philo->t_n_eat);
+	if (ft_strncmp(message, "died", 5))
+		pthread_mutex_unlock(&philo->data->mutex_print);
 }
 
-void zero_init(t_philo **philo)
+int	ft_destroy_all(t_philo *philo)
 {
 	int	i;
 
 	i = 0;
-	while (i < (*philo)->data->n_philo)
+	pthread_mutex_destroy(&philo->data->mutex_dead);
+	pthread_mutex_destroy(&philo->data->mutex_print);
+	while (i < philo->data->n_philo)
 	{
-		(*philo)[i].t_live = 0;
-		(*philo)[i].t_n_eat = 0;
-		i++;
+		pthread_mutex_destroy(&philo->data->mutex_fork[i++]);
 	}
-}
-
-void *ft_check_eat(void *arg)
-{
-	t_philo *philo;
-	int		i;
-
-	philo = arg;
-	while (i != philo->data->n_philo && !philo->data->is_dead)
-	{
-		i = 0;
-		while (!philo->data->is_dead && i < philo->data->n_philo
-				&& philo[i].t_n_eat >= philo->data->n_t_to_eat)
-				i++;
-	}
-	philo->data->philo_ate = 1;
+	free(philo->data->mutex_fork);
+	free(philo->data);
+	free(philo);
 	return (0);
 }
