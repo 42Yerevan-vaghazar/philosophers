@@ -38,27 +38,15 @@ void *start_cycle(void *arg_philo)
 		print_actions(philo, "has taken a fork");
 		pthread_mutex_lock(&philo->data->mutex[philo->fork_r_id]);
 		print_actions(philo, "has taken a fork");
-		philo->t_eat = 0;
-		philo->start_eat = philo->data->current_time;
 		print_actions(philo, "is eating");
-		while (philo->t_eat <= philo->data->t_to_eat)
-		{
-			usleep(100);
-			philo->t_eat = philo->data->current_time - philo->start_eat;
-		}
+		usleep(philo->data->t_to_eat * 1000);
 		pthread_mutex_unlock(&philo->data->mutex[philo->fork_l_id]);
 		pthread_mutex_unlock(&philo->data->mutex[philo->fork_r_id]);
 		philo->t_n_eat++;
 		philo->t_live = 0;
 		philo->start_live = philo->data->current_time;
-		philo->start_sleep = philo->start_live;
 		print_actions(philo, "is sleeping");
-		philo->t_sleep = 0;
-		while (philo->t_sleep <= philo->data->t_to_sleep)
-		{
-			usleep(100);
-			philo->t_sleep = philo->data->current_time - philo->start_sleep;
-		}
+		usleep(philo->data->t_to_eat * 1000);
 		print_actions(philo, "is thinking");
 	}
 	return (0);
@@ -90,8 +78,8 @@ int	create_threads(t_philo **arg)
 	t_philo	*philo;
 
 	philo = *arg;
-	i = 0;
-	while (i < philo->data->n_philo)
+	i = -1;
+	while (++i < philo->data->n_philo)
 	{
 		philo[i].data = philo[0].data;
 		philo[i].fork_l_id = i;
@@ -100,21 +88,22 @@ int	create_threads(t_philo **arg)
 		else
 			philo[i].fork_r_id = i + 1;
 		philo[i].id = i + 1;
-		philo[i].status = "is thinking";
-		philo[i].t_func_checker = 0;
-		zero_initializer(&philo[i].t_n_eat, &philo[i].t_live, &philo[i].t_eat, &philo[i].t_sleep);
-		i++;
+		zero_initializer(&philo[i].t_n_eat, &philo[i].t_live, NULL, NULL);
 	}
 	philo->data->start_prog = get_current_time();
 	philo->data->current_time = philo->data->start_prog;
-	i = 0;
-	while (i < philo->data->n_philo)
+	i = -1;
+	while (++i < philo->data->n_philo)
 	{
 		philo[i].start_live = philo->data->start_prog;
 		pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
-		i++;
 	}
 	return (0);
+}
+
+int	ft_destroy_all(t_philo *philo)
+{
+	
 }
 
 int main(int ac, char **av)
@@ -133,16 +122,21 @@ int main(int ac, char **av)
 			pthread_mutex_init(&philo->data->mutex[i], NULL);
 		create_threads(&philo);
 		i = 0;
-		while (philo->data->t_to_die > philo[i].t_live)
+		while (/*philo->data->t_to_die > philo[i].t_live
+			&&*/ (ac == 5 || philo->data->n_t_to_eat > philo->t_n_eat))
 		{
-			usleep(100);
+				// usleep(1000000);
+			if (philo->data->t_to_die < philo[i].t_live)
+			{
+				print_actions(&philo[i], "died");
+				break;
+			}
 			philo->data->current_time = get_current_time();
 			philo[i].t_live = philo->data->current_time - philo[i].start_live;
 			if (i == philo->data->n_philo - 1)
 				i = -1;
 			i++;
 		}
-		print_actions(&philo[i], "died");
 		free(philo->data->mutex);
 		free(philo->data);
 		free(philo);

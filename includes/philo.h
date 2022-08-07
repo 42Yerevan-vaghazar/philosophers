@@ -13,19 +13,11 @@
 #ifndef PHILO_H
 # define PHILO_H
 
+#include <unistd.h>
 #include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "libft.h"
 #include <sys/time.h>
-// #include <stddef.h>
-#define N_PHILO 200
-
-typedef struct s_fork
-{
-	int		id;
-	int		lock;
-}				t_fork;
 
 typedef struct s_var
 {
@@ -38,8 +30,6 @@ typedef struct s_var
 	double			start_prog;
 	unsigned int	t_start_prog;
 	double			current_time;
-	struct			timeval start_time;
-	// t_fork			*fork;
 	pthread_mutex_t	*mutex;
 	pthread_mutex_t	mutex_dead;
 	int				is_dead;
@@ -49,18 +39,11 @@ typedef struct s_philo
 {
 	unsigned int	id;
 	pthread_t		ptid;
-	struct			timeval restart_time;
 	double			start_live;
-	double			start_eat;
-	double			start_sleep;
 	unsigned int	t_live;
-	unsigned int	t_eat;
-	unsigned int	t_sleep;
-	char			*status;
 	int				fork_l_id;
 	int				fork_r_id;
-	int				t_n_eat;
-	int				t_func_checker;
+	unsigned int	t_n_eat;
 	t_var			*data;
 }				t_philo;
 
