@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/08/07 11:40:59 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/08/07 14:48:21 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,13 @@ typedef struct s_var
 	double			start_prog;
 	unsigned int	t_start_prog;
 	double			current_time;
-	pthread_mutex_t	*mutex;
+	pthread_mutex_t	*mutex_fork;
 	pthread_mutex_t	mutex_print;
 	pthread_mutex_t	mutex_dead;
 	int				is_dead;
+	pthread_t		eat_ptid;
+	int				philo_ate;
+	int				ac;
 }				t_var;
 
 typedef struct s_philo
@@ -54,7 +57,7 @@ typedef struct s_philo
 int	ft_strncmp(const char *s1, const char *s2, size_t n);
 int	ft_atoi(const char *nptr);
 int	valid_args(char **str, int ac);
-void zero_initializer(void *arg_1, void *arg_2, void *arg_3, void *arg_4);
-
+void zero_init(t_philo **philo);
+void *ft_check_eat(void *arg);
 
 #endif
