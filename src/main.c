@@ -68,13 +68,13 @@ int	create_threads(t_philo *philo)
 	philo->data->start_prog = get_current_time();
 	philo->data->current_time = philo->data->start_prog;
 	i = -1;
-	if (philo->data->ac == 6)
-		pthread_create(&philo->data->eat_ptid, NULL, &ft_check_eat, philo);
 	while (++i < philo->data->n_philo)
 	{
 		philo[i].start_live = philo->data->start_prog;
 		pthread_create(&philo[i].ptid, NULL, &start_cycle, &philo[i]);
 	}
+	if (philo->data->ac == 6)
+		pthread_create(&philo->data->eat_ptid, NULL, &ft_check_eat, philo);
 	return (0);
 }
 
