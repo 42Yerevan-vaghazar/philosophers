@@ -8,7 +8,7 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRCS = $(wildcard ./src/*.c)
 
-SRCS_BONUS = $(wildcard ./bonus/*.c)
+SRCS_BONUS = $(wildcard ./src_bonus/*.c)
 
 OBJS = $(patsubst %.c, %.o, $(SRCS))
 
@@ -17,6 +17,8 @@ SRCS_BONUS += $(filter-out ./src/main.c, $(SRCS))
 OBJS_BONUS = $(patsubst %.c, %.o, $(SRCS_BONUS))
 
 RM = rm -f
+
+# $(info $$var is [$(SRCS_BONUS)])
 
 .c.o:
 	$(CC) $(CFLAGS) -c $< -o ${<:.c=.o}
@@ -29,7 +31,7 @@ $(NAME): $(OBJS)
 bonus: $(BONUS)
 
 $(BONUS): $(OBJS_BONUS)
-	$(CC) $(CFLAGS) $(OBJS_BONUS) -o $(BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) -lpthread -lm -lrt -o $(BONUS)
 
 clean:
 	$(RM) $(OBJS)
