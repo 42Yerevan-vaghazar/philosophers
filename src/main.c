@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 11:01:25 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/04 18:00:19 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/08 13:34:39 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,10 @@ int	main(int ac, char **av)
 			return (1);
 		if (get_args(&philo, av, ac))
 			return (1);
+		ft_init(philo);
 		create_threads(philo);
 		dead_check(philo);
+		ft_destroy_all(philo);
 	}
 	else
 		printf("Error: usage -> number_of_philosophers time_to_die time_to_eat\

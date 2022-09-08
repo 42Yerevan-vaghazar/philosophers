@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:58:20 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/04 18:25:17 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/07 10:32:31 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,5 +98,23 @@ int	dead_check(t_philo *philo)
 			i++;
 		}
 	}
+	return (0);
+}
+
+void	*ft_check_eat(void *arg)
+{
+	t_philo	*philo;
+	int		i;
+
+	philo = arg;
+	i = 0;
+	while (i != philo->data->n_philo && !philo->data->is_dead)
+	{
+		i = 0;
+		while (!philo->data->is_dead && i < philo->data->n_philo
+			&& philo[i].t_n_eat >= philo->data->n_t_to_eat)
+				i++;
+	}
+	philo->data->philo_ate = 1;
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/04 17:59:13 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/08 14:11:45 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,4 +65,5 @@ int			get_args(t_philo	**arg, char **av, int ac);
 int			dead_check(t_philo *philo);
 int			create_threads(t_philo *philo);
 void		philo_eat(t_philo *philo);
+int			ft_destroy_all(t_philo *philo);
 #endif

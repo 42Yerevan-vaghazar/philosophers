@@ -1,59 +1,45 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   init_sem.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/08/07 16:28:05 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/08 13:25:00 by vaghazar         ###   ########.fr       */
+/*   Created: 2022/09/07 10:38:08 by vaghazar          #+#    #+#             */
+/*   Updated: 2022/09/08 13:47:03 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../includes/philo.h"
+#include "../includes/philo_bonus.h"
 
-static int	ft_isdigit(int arg)
-{
-	if (!(arg <= 57 && arg >= 48))
-	{
-		return (0);
-	}
-	return (1);
-}
-
-int	valid_args(char **str, int ac)
+int	ft_init_sem(t_philo *philo)
 {
 	int	i;
-	int	j;
 
-	i = 1;
-	j = 0;
-	while (i < ac)
+	i = -1;
+	while (i < philo->data->n_philo)
 	{
-		while (str[i][j])
-		{
-			if ((!ft_isdigit((int)str[i][j]) && str[i][0] != '+' )
-				|| (!ft_isdigit((int)str[i][j]) && j != 0))
-			{
-				printf("Error: not valid\n");
-				return (0);
-			}
-			j++;
-		}
-		j = 0;
+		philo[i].t_live = 0;
+		philo[i].t_n_eat = 0;
 		i++;
 	}
-	return (1);
+	sem_unlink("/sem_fork");
+	sem_unlink("/sem_print");
+	sem_unlink("/sem_dead");
+	philo->data->sem_fork = sem_open("/sem_fork", O_CREAT, S_IRWXU, philo->data->n_philo);
+	philo->data->sem_print = sem_open("/sem_print", O_CREAT, S_IRWXU, 1);
+	philo->data->sem_dead = sem_open("/sem_dead", O_CREAT, S_IRWXU, 1);
+	return (0);
 }
 
-int	get_args(t_philo	**arg, char **av, int ac)
+int	get_args_bonus(t_philo	**arg, char **av, int ac)
 {
 	t_philo	*philo;
 
 	*arg = malloc(sizeof(t_philo) * ft_atoi(av[1]));
 	philo = *arg;
 	philo->data = (t_var *)malloc(sizeof(t_var));
-	(*arg)->data->mutex_fork = malloc(sizeof(t_philo) * ft_atoi(av[1]));
+	(*arg)->data->sem_fork = malloc(sizeof(t_philo) * ft_atoi(av[1]));
 	philo->data->n_philo = ft_atoi(av[1]);
 	philo->data->t_to_die = ft_atoi(av[2]);
 	philo->data->t_to_eat = ft_atoi(av[3]);
@@ -68,27 +54,5 @@ int	get_args(t_philo	**arg, char **av, int ac)
 	philo->data->t_start_prog = 0;
 	philo->data->philo_ate = 0;
 	philo->data->ac = ac;
-	// philo->data->pid = getpid();
-	// ft_init(philo);
 	return (0);
 }
-
-int	ft_init(t_philo *philo)
-{
-	int	i;
-
-	i = -1;
-	while (i < philo->data->n_philo)
-	{
-		philo[i].t_live = 0;
-		philo[i].t_n_eat = 0;
-		i++;
-	}
-	pthread_mutex_init(&philo->data->mutex_dead, NULL);
-	pthread_mutex_init(&philo->data->mutex_print, NULL);
-	i = -1;
-	while (++i < philo->data->n_philo)
-		pthread_mutex_init(&philo->data->mutex_fork[i], NULL);
-	return (0);
-}
-

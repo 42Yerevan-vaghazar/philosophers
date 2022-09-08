@@ -4,7 +4,7 @@ BONUS = philo_bonus
 
 CC = cc
 
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -g
 
 SRCS = $(wildcard ./src/*.c)
 
@@ -31,7 +31,7 @@ $(NAME): $(OBJS)
 bonus: $(BONUS)
 
 $(BONUS): $(OBJS_BONUS)
-	$(CC) $(CFLAGS) $(OBJS_BONUS) -lpthread -lm -lrt -o $(BONUS)
+	$(CC) $(CFLAGS) $(OBJS_BONUS) -lpthread  -o $(BONUS)
 
 clean:
 	$(RM) $(OBJS)
