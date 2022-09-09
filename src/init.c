@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:28:05 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/08 13:25:00 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/09 09:48:35 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,49 +46,43 @@ int	valid_args(char **str, int ac)
 	return (1);
 }
 
-int	get_args(t_philo	**arg, char **av, int ac)
+int	get_args(char **av, int ac, t_global *global)
 {
-	t_philo	*philo;
-
-	*arg = malloc(sizeof(t_philo) * ft_atoi(av[1]));
-	philo = *arg;
-	philo->data = (t_var *)malloc(sizeof(t_var));
-	(*arg)->data->mutex_fork = malloc(sizeof(t_philo) * ft_atoi(av[1]));
-	philo->data->n_philo = ft_atoi(av[1]);
-	philo->data->t_to_die = ft_atoi(av[2]);
-	philo->data->t_to_eat = ft_atoi(av[3]);
-	philo->data->t_to_sleep = ft_atoi(av[4]);
+	global->philo = malloc(sizeof(t_philo) * ft_atoi(av[1]));
+	global->philo->rules = (t_var *)malloc(sizeof(t_var));
+	global->mutex_fork = malloc(sizeof(t_philo) * ft_atoi(av[1]));
+	global->n_philo = ft_atoi(av[1]);
+	global->philo->rules->t_to_die = ft_atoi(av[2]);
+	global->philo->rules->t_to_eat = ft_atoi(av[3]);
+	global->philo->rules->t_to_sleep = ft_atoi(av[4]);
 	if (ac == 6)
 	{
-		philo[0].data->n_t_to_eat = ft_atoi(av[5]);
-		if (philo[0].data->n_t_to_eat == 0)
+		global->philo[0].rules->n_t_to_eat = ft_atoi(av[5]);
+		if (global->philo[0].rules->n_t_to_eat == 0)
 			return (1);
 	}
-	philo->data->is_dead = 0;
-	philo->data->t_start_prog = 0;
-	philo->data->philo_ate = 0;
-	philo->data->ac = ac;
-	// philo->data->pid = getpid();
-	// ft_init(philo);
+	global->is_dead = 0;
+	global->philo->rules->t_start_prog = 0;
+	global->philo_ate = 0;
+	global->ac = ac;
 	return (0);
 }
 
-int	ft_init(t_philo *philo)
+int	ft_init(t_global *global)
 {
 	int	i;
 
 	i = -1;
-	while (i < philo->data->n_philo)
+	while (i < global->n_philo)
 	{
-		philo[i].t_live = 0;
-		philo[i].t_n_eat = 0;
+		global->philo[i].t_live = 0;
+		global->philo[i].t_n_eat = 0;
 		i++;
 	}
-	pthread_mutex_init(&philo->data->mutex_dead, NULL);
-	pthread_mutex_init(&philo->data->mutex_print, NULL);
+	pthread_mutex_init(&global->philo->rules->mutex_print, NULL);
 	i = -1;
-	while (++i < philo->data->n_philo)
-		pthread_mutex_init(&philo->data->mutex_fork[i], NULL);
+	while (++i < global->n_philo)
+		pthread_mutex_init(&global->mutex_fork[i], NULL);
 	return (0);
 }
 
