@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/09 10:53:46 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/12 21:30:13 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 # include <sys/time.h>
 # include <semaphore.h>
 
-typedef struct s_var
+typedef struct s_rules
 {
 	unsigned int	t_to_think;
 	unsigned int	t_to_eat;
@@ -31,8 +31,11 @@ typedef struct s_var
 	double			start_prog;
 	unsigned int	t_start_prog;
 	double			current_time;
-	// pthread_mutex_t	mutex_print;
-}				t_var;
+	sem_t			*sem_fork;
+	sem_t			*sem_eat_check;
+	sem_t			*sem_print;
+	sem_t			*sem_dead;
+}				t_rules;
 
 typedef struct s_philo
 {
@@ -44,11 +47,9 @@ typedef struct s_philo
 	unsigned int	t_n_eat;
 	double			start_sleep;
 	unsigned int	t_tmp;
-	pid_t 			pid;
-	t_var			*rules;
-	sem_t			*sem_dead;
-	sem_t			*sem_fork;
-	sem_t			*sem_print;
+	int				is_dead;
+	pid_t			pid;
+	t_rules			*r;
 }				t_philo;
 
 typedef struct s_global
@@ -58,14 +59,14 @@ typedef struct s_global
 	int				philo_ate;
 	int				is_dead;
 	int				ac;
-	t_philo			*philo;
+	t_philo			*p;
 
 }				t_global;
 
 int			ft_strncmp(const char *s1, const char *s2, size_t n);
 int			ft_atoi(const char *nptr);
 int			valid_args(char **str, int ac);
-void		*ft_check_eat(void *arg);
+void		*ft_check_eat_bonus(void *arg);
 long double	get_current_time(void);
 void		print_actions_bonus(t_philo *philo, char *message);
 int			ft_init_sem(t_global *global);

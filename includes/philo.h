@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/09 09:50:37 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/12 21:30:51 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@
 # include <stdlib.h>
 # include <sys/time.h>
 
-
-typedef struct s_var
+typedef struct s_rules
 {
 	unsigned int	t_to_think;
 	unsigned int	t_to_eat;
@@ -31,7 +30,7 @@ typedef struct s_var
 	unsigned int	t_start_prog;
 	double			current_time;
 	pthread_mutex_t	mutex_print;
-}				t_var;
+}				t_rules;
 
 typedef struct s_philo
 {
@@ -45,7 +44,7 @@ typedef struct s_philo
 	unsigned int	t_tmp;
 	pthread_mutex_t	*mutex_fork_l;
 	pthread_mutex_t	*mutex_fork_r;
-	t_var			*rules;
+	t_rules			*r;
 }				t_philo;
 
 typedef struct s_global
@@ -56,8 +55,7 @@ typedef struct s_global
 	pthread_mutex_t	*mutex_fork;
 	int				is_dead;
 	int				ac;
-	t_philo			*philo;
-
+	t_philo			*p;
 }				t_global;
 
 int			ft_strncmp(const char *s1, const char *s2, size_t n);

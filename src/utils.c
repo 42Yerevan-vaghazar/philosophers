@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/08/07 16:31:22 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/09 09:50:09 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/12 21:35:44 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,15 +63,15 @@ long double	get_current_time(void)
 	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
 
-void	print_actions(t_philo *philo, char *message)
+void	print_actions(t_philo *p, char *message)
 {
-	pthread_mutex_lock(&philo->rules->mutex_print);
-	philo->rules->t_start_prog = philo->rules->current_time
-		- philo->rules->start_prog;
-	printf("%d %d %s %d\n", philo->rules->t_start_prog,
-		philo->id, message, philo->t_n_eat);
+	pthread_mutex_lock(&p->r->mutex_print);
+	p->r->t_start_prog = p->r->current_time
+		- p->r->start_prog;
+	printf("%d %d %s %d\n", p->r->t_start_prog,
+		p->id, message, p->t_n_eat);
 	if (ft_strncmp(message, "died", 5))
-		pthread_mutex_unlock(&philo->rules->mutex_print);
+		pthread_mutex_unlock(&p->r->mutex_print);
 }
 
 int	ft_destroy_all(t_global *general)
@@ -79,13 +79,13 @@ int	ft_destroy_all(t_global *general)
 	int	i;
 
 	i = 0;
-	pthread_mutex_destroy(&general->philo->rules->mutex_print);
+	pthread_mutex_destroy(&general->p->r->mutex_print);
 	while (i < general->n_philo)
 	{
 		pthread_mutex_destroy(&general->mutex_fork[i++]);
 	}
 	free(general->mutex_fork);
-	free(general->philo->rules);
-	free(general->philo);
+	free(general->p->r);
+	free(general->p);
 	return (0);
 }
