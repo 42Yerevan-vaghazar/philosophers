@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:58:20 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/12 21:34:44 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/13 18:59:18 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,10 +108,10 @@ void	*ft_check_eat(void *arg)
 
 	g = arg;
 	i = 0;
-	while (i != g->n_philo)
+	while (!g->is_dead && i != g->n_philo)
 	{
 		i = 0;
-		while (i < g->n_philo
+		while (!g->is_dead && i < g->n_philo
 			&& g->p[i].t_n_eat >= g->p->r->n_t_to_eat)
 				i++;
 	}

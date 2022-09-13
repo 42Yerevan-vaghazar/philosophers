@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/12 21:30:51 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/13 19:08:44 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,4 +70,5 @@ int			dead_check(t_global *general);
 int			create_threads(t_global *general);
 void		philo_eat(t_philo *philo);
 int			ft_destroy_all(t_global *general);
+
 #endif

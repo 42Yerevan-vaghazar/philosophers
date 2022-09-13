@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/07/03 12:47:51 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/12 21:30:13 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:05:35 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ typedef struct s_global
 {
 	pthread_t		eat_ptid;
 	int				n_philo;
-	int				philo_ate;
 	int				is_dead;
 	int				ac;
 	t_philo			*p;
@@ -74,5 +73,5 @@ int			get_args_bonus(char **av, int ac, t_global *global);
 void		*dead_check_bonus(void *arg);
 void		routine(void *arg_philo);
 void		philo_eat_sem(t_philo *philo);
-int			ft_destroy_all_bonus(t_global *global);
+void		ft_destroy_all_bonus(t_global *global);
 #endif

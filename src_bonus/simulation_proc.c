@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 17:58:20 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/12 21:44:00 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:43:25 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 void	philo_eat_sem(t_philo *p)
 {
 	sem_wait(p->r->sem_fork);
+	usleep(10);
 	print_actions_bonus(p, "has taken a fork");
 	sem_wait(p->r->sem_fork);
 	print_actions_bonus(p, "has taken a fork");
@@ -22,7 +23,7 @@ void	philo_eat_sem(t_philo *p)
 	p->start_eat = p->r->current_time;
 	p->t_tmp = 0;
 	while (p->t_tmp < p->r->t_to_eat && !usleep(200))
-		p->t_tmp = get_current_time() - p->start_eat;
+		p->t_tmp = p->r->current_time - p->start_eat;
 	sem_post(p->r->sem_fork);
 	sem_post(p->r->sem_fork);
 }
@@ -40,7 +41,9 @@ void	*dead_check_bonus(void *arg)
 		p->t_live = p->r->current_time - p->start_live;
 		if (p->r->t_to_die < p->t_live)
 		{
+			printf("%d  %d\n", p->r->t_to_die, p->t_live);
 			print_actions_bonus(p, "died");
+			// free(p);
 			exit(0);
 			break ;
 		}
@@ -56,7 +59,7 @@ void	*ft_check_eat_bonus(void *arg)
 
 	g = arg;
 	i = 0;
-	while (i != g->n_philo)
+	while (!g->is_dead && i != g->n_philo)
 	{
 		sem_wait(g->p->r->sem_eat_check);
 		i++;

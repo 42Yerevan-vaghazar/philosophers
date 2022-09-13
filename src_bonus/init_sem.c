@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 10:38:08 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/12 21:43:05 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/13 21:23:12 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int	get_args_bonus(char **av, int ac, t_global *g)
 	}
 	g->is_dead = 0;
 	g->p->r->t_start_prog = 0;
-	g->philo_ate = 0;
 	g->ac = ac;
 	return (0);
 }
