@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/07 10:38:21 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/13 21:51:08 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/14 19:50:04 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	create_proc(t_global *g)
 	}
 	g->p->r->start_prog = get_current_time();
 	i = -1;
-	printf("%p\n", &g->p);
 	while (++i < g->n_philo)
 	{
 		g->p[i].start_live = g->p->r->start_prog;
@@ -36,7 +35,6 @@ int	create_proc(t_global *g)
 			routine(&g->p[i]);
 		else
 			g->p[i].pid = pid;
-		// usleep(20);
 	}
 	if (g->ac == 6)
 		pthread_create(&g->eat_ptid, NULL, &ft_check_eat_bonus, g);
@@ -50,26 +48,22 @@ void	routine(void *arg_philo)
 	p = arg_philo;
 	if (p->id % 2 == 0)
 		usleep(15000);
-	p->r->current_time =  get_current_time();
-	p->start_live = p->r->current_time;
 	pthread_create(&p->ptid, NULL, &dead_check_bonus, p);
 	while (1)
 	{
-		// p->r->current_time = get_current_time();
 		philo_eat_sem(p);
 		p->t_live = 0;
-		p->start_live = p->r->current_time;
+		p->start_live = get_current_time();
 		print_actions_bonus(p, "is sleeping");
 		p->t_n_eat++;
 		if (p->t_n_eat == p->r->n_t_to_eat)
 			sem_post(p->r->sem_eat_check);
-		p->start_sleep = p->r->current_time;
+		p->start_sleep = get_current_time();
 		p->t_tmp = 0;
 		while (p->t_tmp < p->r->t_to_sleep && !usleep(200))
-			p->t_tmp = p->r->current_time - p->start_sleep;
+			p->t_tmp = get_current_time() - p->start_sleep;
 		print_actions_bonus(p, "is thinking");
 	}
-	exit(0);
 }
 
 int	main(int ac, char **av)

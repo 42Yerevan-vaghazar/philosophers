@@ -6,7 +6,7 @@
 /*   By: vaghazar <vaghazar@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/09/04 18:29:00 by vaghazar          #+#    #+#             */
-/*   Updated: 2022/09/13 21:48:08 by vaghazar         ###   ########.fr       */
+/*   Updated: 2022/09/14 19:58:32 by vaghazar         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,13 +47,53 @@ void	ft_destroy_all_bonus(t_global *g)
 	ft_destroy_helper(g);
 }
 
-void	print_actions_bonus(t_philo *p, char *message)
+int	ft_atoi(const char *nptr)
 {
-	sem_wait(p->r->sem_print);
-	p->r->t_start_prog = p->r->current_time
-		- p->r->start_prog;
-	printf("%d %d %s %d\n", p->r->t_start_prog,
-		p->id, message, p->t_n_eat);
-	if (ft_strncmp(message, "died", 5))
-		sem_post(p->r->sem_print);
+	int	num;
+	int	temp;
+
+	num = 0;
+	temp = 1;
+	while (*nptr == ' ' || *nptr == '\t' || *nptr == '\n'
+		|| *nptr == '\v' || *nptr == '\f' || *nptr == '\r')
+	nptr++;
+	if (*nptr == '-')
+	{
+		temp *= -1;
+		nptr++;
+	}
+	else if (*nptr == '+')
+		nptr++;
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		num = (num * 10) + (*nptr - '0');
+		if (!(*(nptr + 1) >= '0' && *(nptr + 1) <= '9'))
+			return (num * temp);
+		nptr++;
+	}
+	return (num * temp);
+}
+
+int	ft_strncmp(const char *s1, const char *s2, size_t n)
+{
+	if (n == 0)
+		return (0);
+	while (*s1 && --n)
+	{
+		if (*s1 != *s2)
+		{
+			break ;
+		}
+		s1++;
+		s2++;
+	}
+	return (*(unsigned char *)s1 - *(unsigned char *)s2);
+}
+
+long double	get_current_time(void)
+{
+	struct timeval	time;
+
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * 1000) + (time.tv_usec / 1000));
 }
