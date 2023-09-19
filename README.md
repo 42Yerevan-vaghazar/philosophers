@@ -1,8 +1,4 @@
-# philosophers
-42 Yerevan
-In this project, you will learn the basics of threading a process.
-You will see how to create threads and you will discover mutexes.
-
+In this project, you studied the basics of threading a process, creating threads and discovering mutexes.
 
 
 introduction to threads and mutexes -> https://www.codequoi.com/en/threads-mutexes-and-concurrent-programming-in-c/
